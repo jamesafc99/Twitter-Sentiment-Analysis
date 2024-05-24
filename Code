@@ -1,0 +1,51 @@
+!pip install tweepy pandas textblob matplotlib
+
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+from textblob import TextBlob
+import matplotlib.pyplot as plt
+
+# Create a mock DataFrame
+data = {
+    'Tweet': [
+        "I love this election, it's so exciting!",
+        "This election is a disaster.",
+        "I have no opinion on this election.",
+        "The candidates are doing great!",
+        "I am so tired of this election.",
+        "This is the best election ever!",
+        "I don't like any of the candidates.",
+        "This election is boring.",
+        "What a fantastic debate last night!",
+        "I'm not sure who to vote for."
+    ],
+    'Timestamp': pd.date_range(start='2023-01-01', periods=10, freq='H')
+}
+
+tweets_df = pd.DataFrame(data)
+
+# Function to analyze sentiment
+def analyze_sentiment(tweet):
+    analysis = TextBlob(tweet)
+    if analysis.sentiment.polarity > 0:
+        return 'Positive'
+    elif analysis.sentiment.polarity == 0:
+        return 'Neutral'
+    else:
+        return 'Negative'
+
+# Analyze sentiment
+tweets_df['Sentiment'] = tweets_df['Tweet'].apply(analyze_sentiment)
+
+# Visualize the sentiment distribution
+sentiment_counts = tweets_df['Sentiment'].value_counts()
+plt.figure(figsize=(8, 6))
+sentiment_counts.plot(kind='bar', color=['green', 'blue', 'red'])
+plt.title('Sentiment Analysis of Mock Tweets')
+plt.xlabel('Sentiment')
+plt.ylabel('Number of Tweets')
+plt.show()
+
+# Display the DataFrame with sentiments
+tweets_df
